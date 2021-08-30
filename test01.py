@@ -63,7 +63,7 @@ def test_four(a):  assert FOUR(incr)(a) == a + 4
 @given(integers(), sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
 def test_succ(a, f):  assert SUCC(f)(incr)(a) == f(incr)(a) + 1
 
-@given(integers(), 
+@given(integers() | floats(allow_nan=False), 
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
 def test_add(a, g, f):  
@@ -71,7 +71,7 @@ def test_add(a, g, f):
     assert ADD(g)(ZERO)(incr)(a) == g(incr)(a)
     assert ADD(f)(ZERO)(incr)(a) == f(incr)(a)
 
-@given(integers(), 
+@given(integers() | floats(allow_nan=False), 
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
 def test_mul(a, g, f):  
