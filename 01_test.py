@@ -14,6 +14,8 @@ THREE = lambda f: lambda x: f(f(f(x)))
 FOUR  = lambda f: lambda x: f(f(f(f(x))))
 ZERO  = lambda f: lambda x: x
 SUCC  = lambda n: lambda f: lambda x: f(n(f)(x))
+ADD = lambda x: lambda y: y(SUCC)(x)
+MUL = lambda x: lambda y: lambda f: y(x(f))
 
 @given(integers(), floats(allow_nan=False))
 def test_left(a, b): assert left(a)(b) == a
