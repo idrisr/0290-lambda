@@ -1,25 +1,8 @@
 from hypothesis.strategies import *
 from hypothesis import given
 import pytest
+from lc import *
 
-def left(x): return lambda y: x
-def right(x): return lambda y: y
-def TRUE(x): return lambda y: x
-def FALSE(x): return lambda y: y
-def AND(x): return lambda y: x(y)(x)
-def OR(x): return lambda y: x(x)(y)
-def NOT(x): return x(FALSE)(TRUE)
-def incr(x): return x+1
-
-ZERO  = lambda f: lambda x: x
-ONE   = lambda f: lambda x: f(x)
-TWO   = lambda f: lambda x: f(f(x))
-THREE = lambda f: lambda x: f(f(f(x)))
-FOUR  = lambda f: lambda x: f(f(f(f(x))))
-SUCC  = lambda n: lambda f: lambda x: f(n(f)(x))
-EXP =   lambda n: lambda f: lambda x: n(f)(x)
-MUL =   lambda n: lambda f: lambda x: f(n(x))
-ADD =   lambda x: lambda y: y(SUCC)(x)
 
 @given(integers(), integers())
 def test_left(a, b): assert left(a)(b) == a
@@ -74,7 +57,35 @@ def test_add(a, g, f):
 @given(integers() | floats(allow_nan=False), 
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
+def test_sub(a, g, f):  
+    assert ADD(f)(SUB(g)(f))(incr)(a) == g(incr)(a)
+
+@given(integers() | floats(allow_nan=False), 
+        sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
+        sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
 def test_mul(a, g, f):  
     assert MUL(g)(f)(incr)(a) == MUL(f)(g)(incr)(a)
     assert MUL(ZERO)(f)(incr)(a) == a
     assert MUL(ZERO)(g)(incr)(a) == a
+
+@given(integers(), integers())
+def test_cons(a, b):
+    p = CONS(a)(b)
+    assert CAR(p) == a
+    assert CDR(p) == b
+
+@given(sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
+       sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
+       integers() | floats(allow_nan=False))
+def test_T(f, g, a):
+    if f == ZERO:
+        assert CDR(f(T)(CONS(g)(g)))(incr)(a) == CAR(f(T)(CONS(g)(g)))(incr)(a)
+    else:
+        assert CDR(f(T)(CONS(g)(g)))(incr)(a) + 1 == CAR(f(T)(CONS(g)(g)))(incr)(a)
+
+
+@given(sampled_from([ONE, TWO, THREE, FOUR]), 
+        integers())
+def test_pred(f, a):
+    assert PRED(f)(incr)(a) == f(incr)(a) - 1
+    assert SUCC(PRED(f))(incr)(a) == f(incr)(a)
