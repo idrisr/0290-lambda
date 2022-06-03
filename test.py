@@ -54,11 +54,11 @@ def test_add(a, g, f):
     assert ADD(g)(ZERO)(incr)(a) == g(incr)(a)
     assert ADD(f)(ZERO)(incr)(a) == f(incr)(a)
 
-@given(integers() | floats(allow_nan=False), 
-        sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
-        sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
-def test_sub(a, g, f):  
-    assert ADD(f)(SUB(g)(f))(incr)(a) == g(incr)(a)
+#  @given(integers() | floats(allow_nan=False), 
+        #  sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
+        #  sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
+#  def test_sub(a, g, f):  
+    #  assert ADD(f)(SUB(g)(f))(incr)(a) == g(incr)(a)
 
 @given(integers() | floats(allow_nan=False), 
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
