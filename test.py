@@ -46,24 +46,24 @@ def test_four(a):  assert FOUR(incr)(a) == a + 4
 @given(integers(), sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
 def test_succ(a, f):  assert SUCC(f)(incr)(a) == f(incr)(a) + 1
 
-@given(integers() | floats(allow_nan=False), 
+@given(integers() | floats(allow_nan=False),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
-def test_add(a, g, f):  
+def test_add(a, g, f):
     assert ADD(g)(f)(incr)(a) == ADD(f)(g)(incr)(a)
     assert ADD(g)(ZERO)(incr)(a) == g(incr)(a)
     assert ADD(f)(ZERO)(incr)(a) == f(incr)(a)
 
-#  @given(integers() | floats(allow_nan=False), 
+#  @given(integers() | floats(allow_nan=False),
         #  sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         #  sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
-#  def test_sub(a, g, f):  
+#  def test_sub(a, g, f):
     #  assert ADD(f)(SUB(g)(f))(incr)(a) == g(incr)(a)
 
-@given(integers() | floats(allow_nan=False), 
+@given(integers() | floats(allow_nan=False),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]),
         sampled_from([ZERO, ONE, TWO, THREE, FOUR]))
-def test_mul(a, g, f):  
+def test_mul(a, g, f):
     assert MUL(g)(f)(incr)(a) == MUL(f)(g)(incr)(a)
     assert MUL(ZERO)(f)(incr)(a) == a
     assert MUL(ZERO)(g)(incr)(a) == a
@@ -84,7 +84,7 @@ def test_T(f, g, a):
         assert CDR(f(T)(CONS(g)(g)))(incr)(a) + 1 == CAR(f(T)(CONS(g)(g)))(incr)(a)
 
 
-@given(sampled_from([ONE, TWO, THREE, FOUR]), 
+@given(sampled_from([ONE, TWO, THREE, FOUR]),
         integers())
 def test_pred(f, a):
     assert PRED(f)(incr)(a) == f(incr)(a) - 1
